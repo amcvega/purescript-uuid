@@ -1,4 +1,5 @@
-module Data.Uuid (Uuid(Uuid), CRYPTO, Seed, uuidV4, randomSeed) where
+module Data.Uuid (Uuid(Uuid), USeed, uuidV4)
+       where
 
 
 import Control.Monad.Eff (Eff, kind Effect)
@@ -18,27 +19,27 @@ import Unsafe.Coerce (unsafeCoerce)
 
 data Uuid = Uuid (Array Int)
 
-data Seed = Seed (Array Int)
+data USeed = USeed (Array Int)
 
-instance showSeed :: Show Seed where
-  show (Seed is) = show is
+instance showSeed :: Show USeed where
+  show (USeed is) = show is
 
 instance showUuid :: Show Uuid where
   show = uuidToString
 
-foreign import data CRYPTO :: Effect
 
-foreign import randomImpl :: ∀ e. Eff (crypto :: CRYPTO | e) (Array Int)
 
-randomSeed :: ∀ e. Eff (crypto :: CRYPTO | e) Seed
-randomSeed = do
-  s <- randomImpl
-  pure (Seed s)
+-- foreign import randomImpl :: ∀ e. Eff (crypto :: CRYPTO | e) (Array Int)
+
+-- randomSeed :: ∀ e. Eff (crypto :: CRYPTO | e) USeed
+-- randomSeed = do
+--   s <- randomImpl
+--   pure (USeed s)
 
 -- uuidV4 :: Array Int -> Uuid
 -- uuidV4 i32s = Uuid (int128ToHexes i32s)
-uuidV4 :: Seed -> Uuid
-uuidV4 (Seed i32s) = Uuid (int128ToHexes i32s)
+uuidV4 :: Array Int -> Uuid
+uuidV4 i32s = Uuid (int128ToHexes i32s)
 
 uuidToString :: Uuid -> String
 uuidToString (Uuid xs) =

@@ -12,7 +12,9 @@
     "purescript-random": "^3.0.0",
     "purescript-arrays": "^4.1.0",
     "purescript-strings": "^3.2.1",
-    "purescript-exceptions": "^3.0.0"
+    "purescript-exceptions": "^3.0.0",
+    "purescript-transformers": "^3.4.0",
+    "purescript-lists": "^4.7.0"
   },
   "devDependencies": {
     "purescript-psci-support": "^3.0.0"
