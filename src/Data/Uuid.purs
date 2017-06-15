@@ -93,9 +93,9 @@ setHi xs =
 
 setVersion :: Array Int -> Array Int
 setVersion xs =
-  let v = fromMaybe 0 $ xs !! 5
-      v' = (top .&. 0x4) .|. 0x4
-  in fromMaybe xs (updateAt 5 v' xs)
+  let v = fromMaybe 0 $ xs !! 4
+      v' = (v .&. 0x4) .|. 0x4
+  in fromMaybe xs (updateAt 4 v' xs)
 
   
 
