@@ -1,4 +1,4 @@
-module Data.Uuid (Uuid(Uuid), USeed, uuidV4)
+module Data.Uuid (Uuid(Uuid), USeed, uuidV4, nil)
        where
 
 
