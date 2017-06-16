@@ -30,7 +30,7 @@ instance showUuid :: Show Uuid where
 
 
 nil :: Uuid
-nil = Uuid (Array.replicate 32 0)
+nil = Uuid (replicate 32 0)
 
 uuidV4 :: Array Int -> Uuid
 uuidV4 i32s = Uuid (int128ToHexes i32s)
