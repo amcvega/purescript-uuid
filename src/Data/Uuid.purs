@@ -29,15 +29,9 @@ instance showUuid :: Show Uuid where
 
 
 
--- foreign import randomImpl :: ∀ e. Eff (crypto :: CRYPTO | e) (Array Int)
+nil :: Uuid
+nil = Uuid [0,0,0,0]
 
--- randomSeed :: ∀ e. Eff (crypto :: CRYPTO | e) USeed
--- randomSeed = do
---   s <- randomImpl
---   pure (USeed s)
-
--- uuidV4 :: Array Int -> Uuid
--- uuidV4 i32s = Uuid (int128ToHexes i32s)
 uuidV4 :: Array Int -> Uuid
 uuidV4 i32s = Uuid (int128ToHexes i32s)
 
@@ -45,11 +39,11 @@ uuidToString :: Uuid -> String
 uuidToString (Uuid xs) =
   ((take 8 >>> map toHex >>> fromCharArray) xs)
   <> "-"
-  <> ((drop 8 >>> take 4>>> map toHex >>> fromCharArray) xs)
+  <> ((drop 8 >>> take 4 >>> map toHex >>> fromCharArray) xs)
   <> "-"
-  <> ((drop 12 >>> take 4>>> map toHex >>> fromCharArray) xs)
+  <> ((drop 12 >>> take 4 >>> map toHex >>> fromCharArray) xs)
   <> "-"
-  <> ((drop 16 >>> take 4>>> map toHex >>> fromCharArray) xs)
+  <> ((drop 16 >>> take 4 >>> map toHex >>> fromCharArray) xs)
   <> "-"
   <> ((drop 20 >>> take 12 >>> map toHex >>> fromCharArray) xs)
   
@@ -110,3 +104,5 @@ splitInt32 i =
       x7 = (i `zshr` 4) .&. 0x0000000f
       x8 = i .&. 0x0000000f
   in fromFoldable [x1, x2, x3, x4, x5, x6, x7, x8]
+
+
