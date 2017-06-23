@@ -57,7 +57,3 @@ main = runTest do
   test "parse property" $ quickCheck parseProperty
   test "v4 Version property" $ quickCheck v4VersionProperty
   test "v4 Hi property" $ quickCheck v4HiProperty  
-
-
--- main = do
---   log "You should add some tests."

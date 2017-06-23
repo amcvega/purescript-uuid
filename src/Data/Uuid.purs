@@ -94,19 +94,19 @@ charToHex c = case c of
 uuidToString :: Uuid -> String
 uuidToString (Uuid i1 i2 i3 i4) =
   let xs = concatMap splitInt32 [i1,i2,i3,i4]
-  in ((take 8 >>> map toHex >>> fromCharArray) xs)
+  in ((take 8 >>> map fromHex >>> fromCharArray) xs)
      <> "-"
-     <> ((drop 8 >>> take 4 >>> map toHex >>> fromCharArray) xs)
+     <> ((drop 8 >>> take 4 >>> map fromHex >>> fromCharArray) xs)
      <> "-"
-     <> ((drop 12 >>> take 4 >>> map toHex >>> fromCharArray) xs)
+     <> ((drop 12 >>> take 4 >>> map fromHex >>> fromCharArray) xs)
      <> "-"
-     <> ((drop 16 >>> take 4 >>> map toHex >>> fromCharArray) xs)
+     <> ((drop 16 >>> take 4 >>> map fromHex >>> fromCharArray) xs)
      <> "-"
-     <> ((drop 20 >>> take 12 >>> map toHex >>> fromCharArray) xs)
+     <> ((drop 20 >>> take 12 >>> map fromHex >>> fromCharArray) xs)
   
 
-toHex :: Int -> Char
-toHex x = case x of
+fromHex :: Int -> Char
+fromHex x = case x of
   0 -> '0'
   1 -> '1'
   2 -> '2'
