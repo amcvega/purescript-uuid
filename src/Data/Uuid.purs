@@ -1,16 +1,20 @@
-module Data.Uuid (Uuid(Uuid), USeed, uuidV4, nil)
+module Data.Uuid (Uuid(Uuid), uuidV4, nil, isValid, fromString)
        where
 
 
 import Control.Monad.Eff (Eff, kind Effect)
 import Control.Monad.Eff.Exception.Unsafe (unsafeThrow)
+import Control.MonadZero (class MonadZero, guard)
 
 import Data.Array
-import Data.Maybe (fromMaybe)
+import Data.Maybe (Maybe, fromMaybe)
 import Data.Int.Bits
 
-import Data.String (fromCharArray)
 
+import Data.String (Pattern(Pattern), split, fromCharArray, toCharArray, toLower)
+import Data.String.Regex as Regex
+import Data.String.Regex.Unsafe as Regex
+import Data.String.Regex.Flags (noFlags)
 
 
 import Prelude
@@ -19,21 +23,67 @@ import Unsafe.Coerce (unsafeCoerce)
 
 data Uuid = Uuid (Array Int)
 
-data USeed = USeed (Array Int)
+-- data USeed = USeed (Array Int)
 
-instance showSeed :: Show USeed where
-  show (USeed is) = show is
+-- instance showSeed :: Show USeed where
+--   show (USeed is) = show is
 
 instance showUuid :: Show Uuid where
   show = uuidToString
 
 
+instance eqUuid :: Eq Uuid where
+  eq (Uuid x) (Uuid y) = x == y
+
 
 nil :: Uuid
 nil = Uuid (replicate 32 0)
 
-uuidV4 :: Array Int -> Uuid
-uuidV4 i32s = Uuid (int128ToHexes i32s)
+uuidV4 :: Int -> Int -> Int -> Int -> Uuid
+uuidV4 i1 i2 i3 i4 = Uuid $ int128ToHexes [i1,i2,i3,i4]
+-- uuidV4 i32s = Uuid (int128ToHexes i32s)
+
+uuidRegex :: Regex.Regex
+uuidRegex = Regex.unsafeRegex "^[0-9A-Fa-f]{8,8}-[0-9A-Fa-f]{4,4}-[0-9A-Fa-f]{4,4}-[0-9A-Fa-f]{4,4}-[0-9A-Fa-f]{12,12}$" noFlags
+
+isValid :: String -> Boolean
+isValid = Regex.test uuidRegex
+
+
+fromString :: String -> Maybe Uuid
+fromString str= do
+  guard $ isValid str
+  let xs = split (Pattern "-") $ toLower str
+      hexes = foldl parseGroup [] xs
+  pure $ Uuid hexes
+  where
+    parseGroup groups s =
+      let ints = foldl parseHex [] (toCharArray s)
+      in groups <> ints
+    parseHex bits c = bits <> [charToHex c]
+
+
+charToHex :: Char -> Int
+charToHex c = case c of
+  '0' -> 0
+  '1' -> 1
+  '2' -> 2
+  '3' -> 3
+  '4' -> 4
+  '5' -> 5
+  '6' -> 6
+  '7' -> 7
+  '8' -> 8
+  '9' -> 9
+  'a' -> 10
+  'b' -> 11
+  'c' -> 12
+  'd' -> 13
+  'e' -> 14
+  'f' -> 15
+  _ -> 0
+        
+
 
 uuidToString :: Uuid -> String
 uuidToString (Uuid xs) =
