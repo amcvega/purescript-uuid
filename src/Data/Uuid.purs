@@ -2,31 +2,27 @@ module Data.Uuid (Uuid(Uuid), uuidV4, nil, isValid, fromString)
        where
 
 
-import Control.Monad.Eff (Eff, kind Effect)
+-- import Control.Monad.Eff (Eff, kind Effect)
 import Control.Monad.Eff.Exception.Unsafe (unsafeThrow)
-import Control.MonadZero (class MonadZero, guard)
+import Control.MonadZero (guard)
 
-import Data.Array
+import Data.Array (drop, foldl, fromFoldable, replicate, take, updateAt, (!!))
 import Data.Maybe (Maybe, fromMaybe)
-import Data.Int.Bits
+import Data.Int.Bits (zshr, (.&.), (.|.))
 
 
 import Data.String (Pattern(Pattern), split, fromCharArray, toCharArray, toLower)
-import Data.String.Regex as Regex
-import Data.String.Regex.Unsafe as Regex
+import Data.String.Regex (Regex, test) as Regex
+import Data.String.Regex.Unsafe (unsafeRegex) as Regex
 import Data.String.Regex.Flags (noFlags)
 
 
 import Prelude
 
-import Unsafe.Coerce (unsafeCoerce)
+-- import Unsafe.Coerce (unsafeCoerce)
 
 data Uuid = Uuid (Array Int)
 
--- data USeed = USeed (Array Int)
-
--- instance showSeed :: Show USeed where
---   show (USeed is) = show is
 
 instance showUuid :: Show Uuid where
   show = uuidToString
@@ -117,6 +113,8 @@ toHex x = case x of
   14 -> 'e'
   15 -> 'f'
   _ -> unsafeThrow ("not a hexadecimal: " <> show x)
+
+  
   
 
 int128ToHexes :: Array Int -> Array Int
@@ -131,8 +129,6 @@ setHi :: Array Int -> Array Int
 setHi xs =
   let top = fromMaybe 0 $ xs !! 0
       top' = (top .&. 0x7) .|. 0x4
-      -- top' = (top .|. 0x40000000)
-      -- top' = (top .&. 0x7fffffff) .|. 0x40000000
   in fromMaybe xs (updateAt 0 top' xs)
 
 setVersion :: Array Int -> Array Int
