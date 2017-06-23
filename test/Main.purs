@@ -1,6 +1,6 @@
 module Test.Main where
 
-import Prelude
+import Prelude (Unit, discard, show, ($), (<))
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE, log)
 import Control.Monad.Eff.Random (RANDOM)
@@ -11,6 +11,7 @@ import Data.Uuid
 import Data.Maybe
 
 import Data.Array as Array
+import Data.Int.Bits
 
 import Test.Unit (test)
 import Test.Unit.Main (runTest)
@@ -21,20 +22,17 @@ import Test.QuickCheck (Result(..), (===))
 
 v4HiProperty :: Int -> Int -> Int -> Int -> Result
 v4HiProperty i1 i2 i3 i4 =
-  let Uuid xs  = uuidV4 i1 i2 i3 i4
-  in case Array.index xs 16 of
-        Nothing  -> Failed "invalid uuid"
-        Just x -> if x < 4
-                  then Failed "Hi Property less than 4"
-                  else Success
-  
+  let Uuid _ _ x _  = uuidV4 i1 i2 i3 i4
+  in if ((x `zshr` 28) .&. 0x0000000f) < 4
+     then Failed "Hi Property less than 4"
+     else Success
 
 v4VersionProperty :: Int -> Int -> Int -> Int -> Result
 v4VersionProperty i1 i2 i3 i4 =
-  let Uuid xs  = uuidV4 i1 i2 i3 i4
-  in case Array.index xs 12 of
-        Nothing  -> Failed "invalid uuid"
-        Just x -> x === 4
+  let Uuid _ x _ _   = uuidV4 i1 i2 i3 i4
+  in ((x `zshr` 12) .&. 0x0000000f) === 4
+
+
 
 validProperty :: Int -> Int -> Int -> Int -> Result
 validProperty i1 i2 i3 i4 =
