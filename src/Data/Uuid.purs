@@ -87,7 +87,7 @@ charToHex c = case c of
   'd' -> 13
   'e' -> 14
   'f' -> 15
-  _ -> 0
+  _ -> unsafeThrow ("not a hexadecimal: " <> show c)
         
 
 
