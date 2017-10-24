@@ -2,6 +2,7 @@ module Data.Uuid (Uuid(Uuid), uuidV4, nil, isValid, fromString, splitInt32)
        where
 
 
+import Data.Generic (class Generic)
 -- import Control.Monad.Eff (Eff, kind Effect)
 import Control.Monad.Eff.Exception.Unsafe (unsafeThrow)
 import Control.MonadZero (guard)
@@ -23,6 +24,7 @@ import Prelude
 -- data Uuid = Uuid (Array Int)
 data Uuid = Uuid Int Int Int Int
 
+derive instance genUuid :: Generic Uuid
 
 instance showUuid :: Show Uuid where
   show = uuidToString
@@ -39,7 +41,7 @@ nil = Uuid 0 0 0 0
 
 -- | Generate UUID V4 using 4 Int32 arguments
 uuidV4 :: Int -> Int -> Int -> Int -> Uuid
-uuidV4 i1 i2 i3 i4 = -- Uuid $ int128ToHexes [i1,i2,i3,i4]
+uuidV4 i1 i2 i3 i4 =
     int128ToUuid [i1,i2,i3,i4]
 
 
@@ -128,13 +130,13 @@ fromHex x = case x of
   
   
 
-int128ToHexes :: Array Int -> Array Int
-int128ToHexes xs =
-  let a1 = splitInt32 (fromMaybe 0 $ xs !! 0)
-      a2 = setVersion $ splitInt32 (fromMaybe 0 $ xs !! 1)
-      a3 = setHi $ splitInt32 (fromMaybe 0 $ xs !! 2) 
-      a4 = splitInt32 (fromMaybe 0 $ xs !! 3)
-  in a1 <> a2 <> a3 <> a4
+-- int128ToHexes :: Array Int -> Array Int
+-- int128ToHexes xs =
+--   let a1 = splitInt32 (fromMaybe 0 $ xs !! 0)
+--       a2 = setVersion $ splitInt32 (fromMaybe 0 $ xs !! 1)
+--       a3 = setHi $ splitInt32 (fromMaybe 0 $ xs !! 2) 
+--       a4 = splitInt32 (fromMaybe 0 $ xs !! 3)
+--   in a1 <> a2 <> a3 <> a4
 
 
 int128ToUuid :: Array Int -> Uuid
@@ -151,17 +153,17 @@ int128ToUuid xs =
   
 
 
-setHi :: Array Int -> Array Int
-setHi xs =
-  let top = fromMaybe 0 $ xs !! 0
-      top' = (top .&. 0x7) .|. 0x4
-  in fromMaybe xs (updateAt 0 top' xs)
+-- setHi :: Array Int -> Array Int
+-- setHi xs =
+--   let top = fromMaybe 0 $ xs !! 0
+--       top' = (top .&. 0x7) .|. 0x4
+--   in fromMaybe xs (updateAt 0 top' xs)
 
-setVersion :: Array Int -> Array Int
-setVersion xs =
-  let v = fromMaybe 0 $ xs !! 4
-      v' = (v .&. 0x4) .|. 0x4
-  in fromMaybe xs (updateAt 4 v' xs)
+-- setVersion :: Array Int -> Array Int
+-- setVersion xs =
+--   let v = fromMaybe 0 $ xs !! 4
+--       v' = (v .&. 0x4) .|. 0x4
+--   in fromMaybe xs (updateAt 4 v' xs)
 
   
 
