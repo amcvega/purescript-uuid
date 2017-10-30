@@ -2,21 +2,20 @@ module Data.Uuid (Uuid(Uuid), uuidV4, nil, isValid, fromString, splitInt32)
        where
 
 
-import Data.Generic (class Generic)
--- import Control.Monad.Eff (Eff, kind Effect)
 import Control.Monad.Eff.Exception.Unsafe (unsafeThrow)
 import Control.MonadZero (guard)
 
+import Data.Generic (class Generic)
 import Data.Array (drop, foldl, fromFoldable, replicate, take, updateAt, (!!), concatMap)
-import Data.Maybe (Maybe, fromMaybe)
+import Data.Maybe (Maybe(..), fromMaybe)
+import Data.Either (Either(..))
 import Data.Int.Bits (zshr, (.&.), (.|.), shl)
-
-
 import Data.String (Pattern(Pattern), split, fromCharArray, toCharArray, toLower)
 import Data.String.Regex (Regex, test) as Regex
 import Data.String.Regex.Unsafe (unsafeRegex) as Regex
 import Data.String.Regex.Flags (noFlags)
-
+import Data.Argonaut.Encode (class EncodeJson, encodeJson)
+import Data.Argonaut.Decode (class DecodeJson, decodeJson)
 
 import Prelude
 
@@ -26,8 +25,19 @@ data Uuid = Uuid Int Int Int Int
 
 derive instance genUuid :: Generic Uuid
 
+
 instance showUuid :: Show Uuid where
   show = uuidToString
+
+instance jsonEncodeUuid :: EncodeJson Uuid where
+  encodeJson = encodeJson <<< show 
+
+instance jsonDecodeUuid :: DecodeJson Uuid where
+  decodeJson s = do
+    str <- decodeJson s
+    case fromString str of
+      Nothing -> Left "invalid Uuid"
+      Just k -> Right k
 
 
 instance eqUuid :: Eq Uuid where
