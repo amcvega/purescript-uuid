@@ -16,6 +16,7 @@ import Data.String.Regex.Unsafe (unsafeRegex) as Regex
 import Data.String.Regex.Flags (noFlags)
 import Data.Argonaut.Encode (class EncodeJson, encodeJson)
 import Data.Argonaut.Decode (class DecodeJson, decodeJson)
+import Data.Ord (class Ord)
 
 import Prelude
 
@@ -24,7 +25,7 @@ import Prelude
 data Uuid = Uuid Int Int Int Int
 
 derive instance genUuid :: Generic Uuid
-
+derive instance ordUuid :: Ord Uuid
 
 instance showUuid :: Show Uuid where
   show = uuidToString
