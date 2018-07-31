@@ -2,21 +2,22 @@ module Data.Uuid (Uuid(Uuid), uuidV4, nil, isValid, fromString, splitInt32)
        where
 
 
-import Control.Monad.Eff.Exception.Unsafe (unsafeThrow)
+import Effect.Exception.Unsafe (unsafeThrow)
 import Control.MonadZero (guard)
 
-import Data.Generic (class Generic)
-import Data.Array (drop, foldl, fromFoldable, replicate, take, updateAt, (!!), concatMap)
+import Data.Generic.Rep (class Generic)
+import Data.Array (drop, foldl, fromFoldable, take, (!!), concatMap)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Either (Either(..))
 import Data.Int.Bits (zshr, (.&.), (.|.), shl)
-import Data.String (Pattern(Pattern), split, fromCharArray, toCharArray, toLower)
+import Data.String (Pattern(Pattern), split, toLower)
+import Data.String.CodeUnits (fromCharArray, toCharArray)
 import Data.String.Regex (Regex, test) as Regex
 import Data.String.Regex.Unsafe (unsafeRegex) as Regex
 import Data.String.Regex.Flags (noFlags)
 import Data.Argonaut.Encode (class EncodeJson, encodeJson)
 import Data.Argonaut.Decode (class DecodeJson, decodeJson)
-import Data.Ord (class Ord)
+
 
 import Prelude
 
@@ -24,7 +25,7 @@ import Prelude
 -- data Uuid = Uuid (Array Int)
 data Uuid = Uuid Int Int Int Int
 
-derive instance genUuid :: Generic Uuid
+derive instance genUuid :: Generic Uuid _
 derive instance ordUuid :: Ord Uuid
 
 instance showUuid :: Show Uuid where
