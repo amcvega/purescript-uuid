@@ -1,11 +1,9 @@
 module Test.Main where
 
 import Prelude (Unit, discard, show, ($), (<))
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Console (CONSOLE, log)
-import Control.Monad.Eff.Random (RANDOM)
-import Control.Monad.Eff.Exception (EXCEPTION)
-import Control.Monad.Aff.AVar
+import Effect (Effect)
+import Effect.Console (log)
+import Effect.Aff.AVar
 
 import Data.Uuid
 import Data.Maybe
@@ -15,8 +13,8 @@ import Data.Int.Bits
 
 import Test.Unit (test)
 import Test.Unit.Main (runTest)
-import Test.Unit.Console (TESTOUTPUT)
-import Test.Unit.QuickCheck (quickCheck)
+-- import Test.Unit.Console (TESTOUTPUT)
+import Test.Unit.QuickCheck (quickCheck, quickCheck')
 
 import Test.QuickCheck (Result(..), (===))
 
@@ -48,10 +46,7 @@ parseProperty i1 i2 i3 i4 =
     Just x -> x === uid
 
 
-main :: forall e. Eff (random :: RANDOM
-                      , console :: CONSOLE
-                      , avar :: AVAR
-                      , testOutput :: TESTOUTPUT | e) Unit
+main :: Effect  Unit
 main = runTest do
   test "valid property" $ quickCheck validProperty
   test "parse property" $ quickCheck parseProperty
