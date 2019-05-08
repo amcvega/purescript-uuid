@@ -121,16 +121,16 @@ uuidToString (Uuid i1 i2 i3 i4) =
 
 fromHex :: Int -> Char
 fromHex x = case x of
-  0 -> '0'
-  1 -> '1'
-  2 -> '2'
-  3 -> '3'
-  4 -> '4'
-  5 -> '5'
-  6 -> '6'
-  7 -> '7'
-  8 -> '8'
-  9 -> '9'
+  0  -> '0'
+  1  -> '1'
+  2  -> '2'
+  3  -> '3'
+  4  -> '4'
+  5  -> '5'
+  6  -> '6'
+  7  -> '7'
+  8  -> '8'
+  9  -> '9'
   10 -> 'a'
   11 -> 'b'
   12 -> 'c'
@@ -164,7 +164,6 @@ int128ToUuid xs =
 
   
 
-
 -- setHi :: Array Int -> Array Int
 -- setHi xs =
 --   let top = fromMaybe 0 $ xs !! 0
@@ -186,9 +185,9 @@ splitInt32 i =
       x3 = (i `zshr` 20) .&. 0x0000000f
       x4 = (i `zshr` 16) .&. 0x0000000f
       x5 = (i `zshr` 12) .&. 0x0000000f
-      x6 = (i `zshr` 8) .&. 0x0000000f
-      x7 = (i `zshr` 4) .&. 0x0000000f
-      x8 = i .&. 0x0000000f
+      x6 = (i `zshr` 8)  .&. 0x0000000f
+      x7 = (i `zshr` 4)  .&. 0x0000000f
+      x8 = i             .&. 0x0000000f
   in fromFoldable [x1, x2, x3, x4, x5, x6, x7, x8]
 
 

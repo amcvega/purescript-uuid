@@ -47,7 +47,7 @@ isValidProperty = do
   where
     uuidArgs = do
       let uid = uuidV4 <$> arbitrary <*> arbitrary
-                <*> arbitrary <*> arbitrary
+                       <*> arbitrary <*> arbitrary
           uid' = (IsUuid <<< show) <$> uid
           s = NotUuid <$> arbitrary
       Gen.oneOf $ NonEmpty (uid') [uid', s]
@@ -63,7 +63,6 @@ parseProperty i1 i2 i3 i4 =
 
 main :: Effect  Unit
 main = runTest do
-  -- test "valid property" $ quickCheck validProperty
   test "isValid" $ quickCheck isValidProperty
   test "parse property" $ quickCheck parseProperty
   test "v4 Version property" $ quickCheck v4VersionProperty
