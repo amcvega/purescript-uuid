@@ -7,10 +7,11 @@
     "output"
   ],
   "dependencies": {
-    "purescript-prelude": "^4.1",
-    "purescript-arrays": "^5.0",
-    "purescript-strings": "^4.0",
-    "purescript-argonaut-codecs": "^4.0",
-    "purescript-exceptions": "^4.0.0"
+    "purescript-prelude": "^4.1.1",
+    "purescript-effect": "^2.0.1",
+    "purescript-exceptions": "^4.0.0",
+    "purescript-generics-rep": "^6.1.1",
+    "purescript-arrays": "^5.3.1",
+    "purescript-argonaut": "^6.0.0"
   }
 }

@@ -40,17 +40,17 @@ data UuidArg = IsUuid String
 
 isValidProperty :: Gen Result
 isValidProperty = do
-  args <- uuidArgs
+  args ← uuidArgs
   pure $ case args of
-    IsUuid s -> isValid s === true
-    NotUuid s -> isValid s /== true
+    IsUuid s → isValid s === true
+    NotUuid s → isValid s /== true
   where
     uuidArgs = do
       let uid = uuidV4 <$> arbitrary <*> arbitrary
                        <*> arbitrary <*> arbitrary
           uid' = (IsUuid <<< show) <$> uid
           s = NotUuid <$> arbitrary
-      Gen.oneOf $ NonEmpty (uid') [uid', s]
+      Gen.oneOf $ NonEmpty uid' [uid', s]
 
 
 parseProperty :: Int -> Int -> Int -> Int -> Result
