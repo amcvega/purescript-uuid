@@ -8,7 +8,8 @@ import Effect.Aff.AVar
 
 import Data.Uuid
 import Data.Maybe
-import Data.NonEmpty (NonEmpty(..))
+-- import Data.NonEmpty (NonEmpty(..))
+import Data.Array.NonEmpty.Internal (NonEmptyArray(..))
 
 import Data.Array as Array
 import Data.Int.Bits
@@ -50,7 +51,7 @@ isValidProperty = do
                        <*> arbitrary <*> arbitrary
           uid' = (IsUuid <<< show) <$> uid
           s = NotUuid <$> arbitrary
-      Gen.oneOf $ NonEmpty uid' [uid', s]
+      Gen.oneOf $ NonEmptyArray [uid', s]
 
 
 parseProperty :: Int -> Int -> Int -> Int -> Result

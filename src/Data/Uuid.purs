@@ -5,6 +5,7 @@ module Data.Uuid (Uuid(Uuid), uuidV4, nil, isValid, fromString, splitInt32)
 import Effect.Exception.Unsafe (unsafeThrow)
 import Control.MonadZero (guard)
 
+-- import Data.Codec.Argonaut (JsonDecodeError(..))
 import Data.Generic.Rep (class Generic)
 import Data.Array (drop, foldl, fromFoldable, take, (!!), concatMap)
 import Data.Maybe (Maybe(..), fromMaybe)
@@ -16,7 +17,7 @@ import Data.String.Regex (Regex, test) as Regex
 import Data.String.Regex.Unsafe (unsafeRegex) as Regex
 import Data.String.Regex.Flags (noFlags)
 import Data.Argonaut.Encode (class EncodeJson, encodeJson)
-import Data.Argonaut.Decode (class DecodeJson, decodeJson)
+import Data.Argonaut.Decode (class DecodeJson, JsonDecodeError(..), decodeJson)
 
 
 import Prelude
@@ -38,7 +39,7 @@ instance jsonDecodeUuid :: DecodeJson Uuid where
   decodeJson s = do
     str <- decodeJson s
     case fromString str of
-      Nothing -> Left "invalid Uuid"
+      Nothing -> Left $ TypeMismatch "invalid Uuid"
       Just k -> Right k
 
 
